@@ -1,0 +1,26 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each productos}}
+        <tr>
+            <td>{{this._id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.precio}}</td>
+            <td>{{this.stock}}</td>
+            <td><button type="button" onclick="eliminarProducto('{{this._id}}')" class="btn btn-danger">Eliminar</button></td>
+            <td><a href="/administracion/{{this._id}}"><button type="button"  class="btn btn-light">Editar</button></a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<a href="/administracion/crear"><button type="button" class="btn btn-success">Crear Producto</button></a>

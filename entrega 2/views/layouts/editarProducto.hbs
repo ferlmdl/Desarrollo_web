@@ -1,0 +1,10 @@
+<form action="/api/productos/{{producto._id}}"
+    method="POST">
+    <label>Nombre</label>
+    <input name="name" value="{{producto.name}}"/>
+    <label>Precio</label>
+    <input name="precio"  value="{{producto.precio}}"/>
+    <label>Stock</label>
+    <input name="stock"  value="{{producto.stock}}" />
+    <button type="submit">Enviar</button>
+</form>
