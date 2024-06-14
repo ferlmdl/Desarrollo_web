@@ -1,5 +1,7 @@
 import express from 'express';
-import User from '../controllers/userController.js';
+import { signup } from '../controllers/userController.js';
+import User from '../models/user.model.js';  // Asegúrate de importar el modelo de usuario
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -62,50 +64,66 @@ router.get('/body', (req, res) => {
     res.render('layouts/body_index', { layout: false });
 });
 
-//rutas post 
+// Rutas POST 
+
+// Rutas POST 
 
 router.post('/registro', async (req, res) => {
-    const { nombre_completo, rut, contrasena } = req.body;
-  
-    try {
+  const { nombre_completo, correo, password } = req.body;
+
+  if (!nombre_completo || !correo || !password) {
+      return res.status(400).send('Todos los campos son obligatorios');
+  }
+
+  try {
       // Crear el nuevo usuario
       const newUser = new User({
-        nombre_completo: nombre_completo,
-        rut: rut,
-        contrasena: contrasena, 
+          name: nombre_completo,
+          correo: correo,
+          password: password,
       });
-  
+      if (correo === 'admin@gmail.com') {
+          newUser.isAdmin = true;
+        }
+
       await newUser.save();
-  
+      newUser.isAuthenticated = true;
+
       res.redirect('/ingresar');
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(500).send('Hubo un error al crear el usuario');
-    }
-  });
-  
-  router.post('/ingresar', async (req, res) => {
-    const { rut, contrasena } = req.body;
-  
-    try {
-      const user = await User.findOne({ rut: rut });
-  
+  }
+});
+
+router.post('/ingresar', async (req, res) => {
+  const { correo, password } = req.body;
+
+  if (!correo || !password) {
+      return res.status(400).send('Todos los campos son obligatorios');
+  }
+
+  try {
+      const user = await User.findOne({ correo: correo });
+
       if (!user) {
-        return res.status(400).send('El RUT ingresado no está registrado');
+          return res.status(400).send('El correo ingresado no está registrado');
       }
-  
+
+      if (user.password !== password) {
+          return res.status(400).send('La contraseña es incorrecta');
+      }
+
       req.session.userId = user._id;
-      req.session.userRut = user.rut;
-  
+      req.session.userCorreo = user.correo;
+      req.session.isAdmin = user.isAdmin;
+      res.locals.isAuthenticated = req.session.isAuthenticated;
+
       res.redirect('/principal');
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(500).send('Hubo un error al iniciar sesión');
-    }
-  });
-  
-  
-  
+    }
+});
 
-
-export default router;
+export default router;
