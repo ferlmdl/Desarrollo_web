@@ -29,14 +29,14 @@ const isAdmin = (req, res, next) => {
       {
         _id: { $in: user.roles }
       },
-      (err, roles) => {
+      (err, role) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
 
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "admin") {
+        for (let i = 0; i < role.length; i++) {
+          if (role[i].name === "admin") {
             next();
             return;
           }
@@ -49,9 +49,18 @@ const isAdmin = (req, res, next) => {
   });
 };
 
+const isAuthenticated = (req, res, next) => {
+  if (req.session.isLoggedIn) {
+    next();
+  } else {
+    res.status(403).send({ message: "¡No autorizado!" });
+  }
+};
+
 const authJwt = {
   verifyToken,
-  isAdmin
+  isAdmin,
+  isAuthenticated
 };
 
 export default authJwt;
