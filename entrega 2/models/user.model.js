@@ -3,9 +3,21 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     name: String,
     dinero: Number,
-    rol: String,
+    role: String,
+    password: {
+        type: String,
+        required: true,
+    },
+    correo: {
+        type: String,
+        required: true,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const userModel = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
-export default userModel;
+export default User;
