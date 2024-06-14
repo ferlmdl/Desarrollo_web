@@ -8,12 +8,12 @@ const Role = db.role;
 
 export const signup = async (req, res) => {
   try {
-    const { nombre_completo, rut } = req.body;
+    const { nombre_completo, correo } = req.body;
 
     // Crear el nuevo usuario sin verificar la contraseña
     const newUser = new User({
       name: nombre_completo,
-      rut: rut,
+      correo: correo,
     });
 
     await newUser.save();
@@ -25,10 +25,10 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
   try {
-    const { rut } = req.body;
+    const { correo } = req.body;
 
-    // Buscar al usuario por su RUT para iniciar sesión
-    const user = await User.findOne({ rut });
+    // Buscar al usuario por su correo para iniciar sesión
+    const user = await User.findOne({ correo });
     if (!user) {
       return res.status(404).send({ message: "Usuario no encontrado" });
     }
