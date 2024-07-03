@@ -77,12 +77,8 @@ app.post('/login', (req, res) => {
   req.session.isLoggedIn = true;
   res.redirect('/');
 });
-app.get('/ruta', (req, res) => {
-  // Aquí, asumimos que req.user es el usuario autenticado
-  res.render('nombre-de-tu-vista', { user: req.user });
-});
 
 // Ruta principal
 app.get('/', (req, res) => {
-  res.render('index', { isLoggedIn: req.session.isLoggedIn });
+  res.render('/', { isLoggedIn: req.session.isLoggedIn });
 });
